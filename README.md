@@ -1,9 +1,6 @@
-# oauth-xyz-client-js
+# OAuth.xyz JS Client _(oauth-xyz-client-js)_
 
-
-# Oauth.xyz JS Client _(oauth-xyz-client-js)_
-
-> Authentication client for [oauth.xyz](https://oauth.xyz/) for in-browser Javascript and Node.js
+> Authentication client for the [oauth.xyz](https://oauth.xyz/) protocol for in-browser Javascript and Node.js
 
 ## Table of Contents
 
@@ -39,11 +36,41 @@ Other implementations:
 ```js
 const { XyzClient } = require('oauth-xyz-client')
 
+const display = {
+  name: 'My RP Application',
+  uri: 'https://app.example.com',
+  logo_uri: 'https://app.example.com/logo.png'
+}
+
+const capabilities = ['jwsd']
+
+// const user = { ... } // optional
+
+// Note: `key` can be passed in either in client constructor, or with request
+const key = {
+  proof: 'jwsd',
+  jwks: { keys: [/* ... */] }
+}
+
 const auth = new XyzClient({ display, capabilities, user })
 
 const server = 'https://as.example.com' // Authorization Server
 
-const response = await auth.request({ server, resources, interact })
+const interact = {
+  redirect: true, // default
+  callback: {
+    uri: 'https://app.example.com/callback/1234',
+    nonce: 'LKLTI25DK82FX4T4QFZC'
+  }
+}
+
+const resources = {
+  actions: [/* ... */],
+  locations: [/* ... */],
+  datatype: [/* ... */]
+}
+
+const response = await auth.request({ server, resources, interact, key })
 ```
 
 ## Install
