@@ -1,0 +1,41 @@
+{
+  "name": "oauth-xyz-client-js",
+  "description": "Authentication client for the https://oauth.xyz protocol for in-browser Javascript and Node.js",
+  "version": "0.0.1",
+  "author": {
+    "name": "Dmitri Zagidulin",
+    "url": "https://github.com/dmitrizagidulin/"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/interop-alliance/oauth-xyz-client-js"
+  },
+  "homepage": "https://github.com/interop-alliance/oauth-xyz-client-js",
+  "bugs": "https://github.com/interop-alliance/oauth-xyz-client-js/issues",
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "main": "src/index.js",
+  "nyc": {
+    "reporter": [
+      "html",
+      "text-summary"
+    ],
+    "cache": true
+  },
+  "standard": {
+    "globals": [
+      "after",
+      "afterEach",
+      "before",
+      "beforeEach",
+      "describe",
+      "it"
+    ]
+  },
+  "engines": {
+    "node": ">=10.0"
+  }
+}
