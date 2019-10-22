@@ -9,8 +9,8 @@
 
 - [Security](#security)
 - [Background](#background)
-- [Install](#install)
 - [Usage](#usage)
+- [Install](#install)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -33,6 +33,19 @@ Other implementations:
 
 * https://github.com/bspk/oauth.xyz-java
 
+
+## Usage
+
+```js
+const { XyzClient } = require('oauth-xyz-client')
+
+const auth = new XyzClient({ display, capabilities, user })
+
+const server = 'https://as.example.com' // Authorization Server
+
+const response = await auth.request({ server, resources, interact })
+```
+
 ## Install
 
 ```bash
@@ -40,10 +53,6 @@ git clone https://github.com/interop-alliance/oauth-xyz-client-js.git
 cd oauth-xyz-client-js
 npm install
 ```
-
-## Usage
-
-TBD
 
 ## Contribute
 
