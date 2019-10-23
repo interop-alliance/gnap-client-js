@@ -39,7 +39,7 @@ const { XyzClient } = require('oauth-xyz-client')
 
 const store = {} // TODO: Store for persisting `nonce`s, request handles, etc
 
-const display = {
+const clientDisplay = {
   name: 'My RP Application',
   uri: 'https://app.example.com',
   logo_uri: 'https://app.example.com/logo.png'
@@ -47,15 +47,21 @@ const display = {
 
 const capabilities = ['jwsd']
 
-// const user = { ... } // optional
-
-// Note: `key` can be passed in either in client constructor, or with request
 const key = {
   proof: 'jwsd',
   jwks: { keys: [/* ... */] }
 }
 
-const auth = new XyzClient({ store, display, capabilities, user })
+// If you pass into the constructor params that would normally go into 
+// `createRequest`, they're stored as defaults that will be auto-included
+// in requests.
+const defaults = {
+  user: { /* .. */ },
+  key,
+  interact
+}
+
+const auth = new XyzClient({ store, clientDisplay, capabilities, ...defaults })
 ```
 
 Create and send a request (low-level API):
@@ -80,16 +86,19 @@ const request = auth.createRequest({ resources, interact, key })
 const { endpoint } = await auth.discover({ server: 'https://as.example.com' })
 
 // Send the request to the transaction endpoint
-const response = await auth.post({ endpoint, request }) // stores handles, server nonce
+const txResponse = await auth.post({ endpoint, request })
 
 const {
-  handle: txHandle,
+  transaction,
   access_token: accessToken,
-  interaction_url: interactionUrl } = response
+  interaction_url: interactionUrl } = txResponse
 
 if (accessToken) { /* party */ }
 
 if (interactionUrl) { /* redirect user to it */ }
+
+// `transaction` holds the various handles and nonces, can be used for
+// continuation requests 
 ```
 
 ## Install
