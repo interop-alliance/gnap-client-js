@@ -30,7 +30,6 @@ Other implementations:
 
 * https://github.com/bspk/oauth.xyz-java
 
-
 ## Usage
 
 Creating a client instance:
@@ -81,12 +80,17 @@ const request = auth.createRequest({ resources, interact, key })
 const { endpoint } = await auth.discover({ server: 'https://as.example.com' })
 
 // Send the request to the transaction endpoint
-const response = await auth.post({ endpoint, request })
+const response = await auth.post({ endpoint, request }) // stores handles, server nonce
+
+const {
+  handle: txHandle,
+  access_token: accessToken,
+  interaction_url: interactionUrl } = response
+
+if (accessToken) { /* party */ }
+
+if (interactionUrl) { /* redirect user to it */ }
 ```
-
-High-level request convenience methods:
-
-TBD
 
 ## Install
 
@@ -98,10 +102,11 @@ npm install
 
 ## Contribute
 
-PRs accepted.
+* Coding Style: [Standard.js](https://standardjs.com/)
+* Docs: JSDoc
+* Readme: [standard-readme](https://github.com/RichardLitt/standard-readme)
 
-Note: If editing the README, please conform to the
-[standard-readme](https://github.com/RichardLitt/standard-readme) specification.
+PRs accepted.
 
 ## License
 
