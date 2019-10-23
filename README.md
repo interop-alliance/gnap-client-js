@@ -1,5 +1,7 @@
 # OAuth.xyz JS Client _(oauth-xyz-client-js)_
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/interop-alliance/oauth-xyz-client-js.svg)](https://greenkeeper.io/)
+
 > Authentication client for the [oauth.xyz](https://oauth.xyz/) protocol for in-browser Javascript and Node.js
 
 ## Table of Contents
