@@ -33,8 +33,12 @@ Other implementations:
 
 ## Usage
 
+Creating a client instance:
+
 ```js
 const { XyzClient } = require('oauth-xyz-client')
+
+const store = {} // TODO: Store for persisting `nonce`s, request handles, etc
 
 const display = {
   name: 'My RP Application',
@@ -52,10 +56,12 @@ const key = {
   jwks: { keys: [/* ... */] }
 }
 
-const auth = new XyzClient({ display, capabilities, user })
+const auth = new XyzClient({ store, display, capabilities, user })
+```
 
-const server = 'https://as.example.com' // Authorization Server
+Create and send a request (low-level API):
 
+```js
 const interact = {
   redirect: true, // default
   callback: {
@@ -63,15 +69,24 @@ const interact = {
     nonce: 'LKLTI25DK82FX4T4QFZC'
   }
 }
-
 const resources = {
   actions: [/* ... */],
   locations: [/* ... */],
   datatype: [/* ... */]
 }
 
-const response = await auth.request({ server, resources, interact, key })
+const request = auth.createRequest({ resources, interact, key })
+
+// Proposed/experimental
+const { endpoint } = await auth.discover({ server: 'https://as.example.com' })
+
+// Send the request to the transaction endpoint
+const response = await auth.post({ endpoint, request })
 ```
+
+High-level request convenience methods:
+
+TBD
 
 ## Install
 
