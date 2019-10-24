@@ -92,10 +92,7 @@ const { endpoint } = await auth.discover({ server: 'https://as.example.com' })
 // Send the request to the transaction endpoint
 const txResponse = await auth.post({ endpoint, request })
 
-const {
-  transaction,
-  access_token: accessToken,
-  interaction_url: interactionUrl } = txResponse
+const { transaction, accessToken, interactionUrl } = txResponse
 
 if (accessToken) { /* party */ }
 
