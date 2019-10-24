@@ -1,6 +1,7 @@
 'use strict'
 
 import axios from 'axios' // todo: consider 'apisauce' instead
+import httpsig from 'http-signature-header'
 
 const DEFAULT_CLIENT = {
   name: 'My RP Application',
@@ -105,6 +106,7 @@ export class XyzClient {
   }
 
   headersFor ({ request }) {
+    // const { createSignatureString, createAuthzHeader } = httpsig
     return {
       // content-type automatically set by axios
       // 'Detached-JWS': '...'
