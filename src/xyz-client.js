@@ -1,5 +1,7 @@
 'use strict'
 
+import axios from 'axios' // todo: consider 'apisauce' instead
+
 const DEFAULT_CLIENT = {
   name: 'My RP Application',
   uri: 'https://app.example.com',
@@ -10,24 +12,26 @@ const DEFAULT_CAPABILITIES = ['httpsig']
 
 export class XyzClient {
   /**
-   * @param store
-   * @param clientDisplay
-   * @param capabilities
-   * @param user
-   * @param key
-   * @param interact
+   * @param store - Store for handles, nonces
+   * @param [clientDisplay]
+   * @param [capabilities]
+   * @param [user]
+   * @param [key]
+   * @param [interact]
+   * @param [httpsAgent] {https.Agent} Optional override
    */
-  constructor ({ store, clientDisplay, capabilities, user, key, interact } = {}) {
+  constructor ({ store = {}, clientDisplay, capabilities, user, key, interact, httpsAgent } = {}) {
     this.store = store
     this.clientDisplay = clientDisplay || DEFAULT_CLIENT
     this.capabilities = capabilities || DEFAULT_CAPABILITIES
     this.user = user
     this.key = key
-    this.interact = interact
+    this.interact = interact || { redirect: true }
+    this.httpsAgent = httpsAgent
   }
 
   /**
-   * @param resources
+   * @param resources {Array<string>|object}
    * @param interact
    * @param key
    * @param user
@@ -35,7 +39,15 @@ export class XyzClient {
    * @returns {TxRequest}
    */
   createRequest ({ resources, interact = this.interact, key = this.key, user = this.user }) {
-    const request = new TxRequest({
+    if (interact.redirect && !interact.callback) {
+      throw new Error('`callback` param is required for redirect interactions.')
+    }
+
+    if (interact.redirect && !interact.callback.nonce) {
+      interact.callback.nonce = this.generateNonce()
+    }
+
+    return new TxRequest({
       clientDisplay: this.clientDisplay,
       capabilities: this.capabilities,
       resources,
@@ -45,12 +57,18 @@ export class XyzClient {
     })
   }
 
+  generateNonce () {
+    return 'LKLTI25DK82FX4T4QFZC'
+  }
+
   /**
+   * Returns transaction endpoint URL.
    * @param server {string}
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
   async discover ({ server }) {
-    throw new Error('discover() is not implemented.')
+    // TODO: actually implement
+    return server + '/transaction'
   }
 
   /**
@@ -64,17 +82,69 @@ export class XyzClient {
       throw new Error('Either endpoint or server param is required.')
     }
 
-    return { transaction: {}, accessToken: '', interactionUrl: '' }
+    if (!endpoint) {
+      endpoint = await this.discover({ server })
+    }
+
+    const headers = this.headersFor({ request })
+    const { httpsAgent } = this
+
+    const { data: response } = await axios.post(endpoint, request,
+      { headers, httpsAgent })
+
+    const {
+      access_token: accessToken,
+      interaction_url: interactionUrl
+    } = response
+
+    return {
+      transaction: Transaction.from({ response, clientNonce: request.clientNonce }),
+      accessToken,
+      interactionUrl
+    }
+  }
+
+  headersFor ({ request }) {
+    return {
+      // content-type automatically set by axios
+      // 'Detached-JWS': '...'
+      // http signature headers go here
+    }
+  }
+}
+
+export class Transaction {
+  constructor ({ handles, clientNonce, serverNonce } = {}) {
+    this.handles = handles || {
+      // handle (tx handle)
+      // display_handle
+      // interact_handle
+      // user_handle
+      // resource_handle
+      // key_handle
+    }
+    this.clientNonce = clientNonce
+    this.serverNonce = serverNonce
+  }
+
+  static from ({ response, clientNonce }) {
+    const { server_nonce: serverNonce, handle } = response
+    const handles = { txHandle: handle }
+    return new Transaction({ handles, clientNonce, serverNonce })
   }
 }
 
 export class TxRequest {
   constructor ({ clientDisplay, resources, interact, key, user, capabilities }) {
-    this.clientDisplay = clientDisplay
+    this.display = clientDisplay
     this.resources = resources
     this.interact = interact
     this.key = key
     this.user = user
     this.capabilities = capabilities
+  }
+
+  get clientNonce () {
+    return this.interact.redirect && this.interact.callback.nonce
   }
 }

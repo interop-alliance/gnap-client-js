@@ -14,13 +14,14 @@
   "homepage": "https://github.com/interop-alliance/oauth-xyz-client-js",
   "bugs": "https://github.com/interop-alliance/oauth-xyz-client-js/issues",
   "scripts": {
-    "test": "npm run test-node",
+    "test": "npm run standard && npm run test-node",
     "test-node": "cross-env NODE_ENV=test mocha -r esm --preserve-symlinks -t 10000 test/**/*.spec.js",
     "test-karma": "karma start test/karma.conf.js",
     "nyc": "cross-env NODE_ENV=test nyc npm run test-node",
     "standard": "standard"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "esm": "^3.2.25"
   },
   "devDependencies": {
