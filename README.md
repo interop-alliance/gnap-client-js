@@ -17,6 +17,10 @@ TBD
 
 ## Background
 
+An Oauth.xyz authentication client, for both 
+[public and confidential clients](https://tools.ietf.org/html/rfc6749#section-2.1),
+for use with in-browser and server-side on Node.js 
+
 Official site:
 
 **[Oauth.xyz](https://oauth.xyz)**
@@ -94,12 +98,45 @@ const txResponse = await auth.post({ endpoint, request })
 
 const { transaction, accessToken, interactionUrl } = txResponse
 
-if (accessToken) { /* party */ }
-
-if (interactionUrl) { /* redirect user to it */ }
+if (accessToken) { /* success! */ }
 
 // `transaction` holds the various handles and nonces, can be used for
 // continuation requests 
+
+if (interactionUrl) {
+  /* send the user's browser to it */
+  auth.interactRedirectWindow({ interactionUrl, transaction }) // or,
+
+  /* open a popup window and redirect it  */
+  auth.interactPopup({ interactionUrl, transaction }) // or,
+
+  /* in Node / Express */
+  res.redirect(interactionUrl) // assuming a `res` ServerResponse object
+}
+```
+
+Parsing the `interact_handle` from front-end response, at the callback url.
+This is low-level (to illustrate the protocol), app devs are expected to use
+a helper method like `sessionFromResponse()` instead.
+
+```js
+// get `callbackUrl` from current url (browser) or request url (server)
+// `transaction` is from the original transaction response
+
+// this also validates the incoming `hash` value against saved nonces
+const interactHandle = await transaction.parseFromUrl(callbackUrl)
+
+const { accessToken } = await transaction.continueWith({ interactHandle })
+```
+
+High-level helper API (used at the callback url, instead of `parseFromUrl`
+/ `continueWith`:
+
+```js
+const session = await transaction.sessionFromResponse()
+
+session.accessToken // validated `access_token`
+session.fetch // wrapped whatwg `fetch()` that makes authenticated requests 
 ```
 
 ## Install

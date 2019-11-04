@@ -9,7 +9,7 @@ const DEFAULT_CLIENT = {
   logo_uri: 'https://app.example.com/logo.png'
 }
 
-const DEFAULT_CAPABILITIES = ['httpsig']
+const DEFAULT_CAPABILITIES = ['httpsig', 'dpop']
 
 export class XyzClient {
   /**
@@ -69,6 +69,9 @@ export class XyzClient {
    */
   async discover ({ server }) {
     // TODO: actually implement
+    // const discoverUrl = new URL('/.well-known/xyz', server)
+    // const { data: { transaction_endpoint: endpoint } } = await get(discoverUrl.toString())
+    // return endpoint
     return server + '/transaction'
   }
 
