@@ -9,14 +9,14 @@ const DEFAULT_CLIENT = {
   logo_uri: 'https://app.example.com/logo.png'
 }
 
-const DEFAULT_CAPABILITIES = ['httpsig']
+const DEFAULT_CAPABILITIES = ['httpsig', 'dpop']
 
 export class XyzClient {
   /**
-   * @param store - Store for handles, nonces
-   * @param [clientDisplay]
-   * @param [capabilities]
-   * @param [user]
+   * @param store {object} Store for handles, nonces
+   * @param [clientDisplay] {object}
+   * @param [capabilities] {Array<string>}
+   * @param [user] {object}
    * @param [key]
    * @param [interact]
    * @param [httpsAgent] {https.Agent} Optional override
@@ -69,6 +69,9 @@ export class XyzClient {
    */
   async discover ({ server }) {
     // TODO: actually implement
+    // const discoverUrl = new URL('/.well-known/xyz', server)
+    // const { data: { transaction_endpoint: endpoint } } = await get(discoverUrl.toString())
+    // return endpoint
     return server + '/transaction'
   }
 
@@ -84,7 +87,7 @@ export class XyzClient {
     }
 
     if (!endpoint) {
-      endpoint = await this.discover({ server })
+      endpoint = await this.discover({ server }) // throws error if not discoverable
     }
 
     const headers = this.headersFor({ request })
@@ -134,6 +137,22 @@ export class Transaction {
     const handles = { txHandle: handle }
     return new Transaction({ handles, clientNonce, serverNonce })
   }
+
+  /**
+   * Redirects the main browser window to the interaction url.
+   *
+   * @param interactionUrl {string}
+   * @param transaction {Transaction}
+   */
+  interactRedirectWindow ({ interactionUrl }) {}
+
+  interactPopup ({ interactionUrl }) {
+    throw new Error('Not implemented.')
+  }
+
+  parseFromUrl (callbackUrl) {}
+
+  continueWith ({ interactHandle }) {}
 }
 
 export class TxRequest {
