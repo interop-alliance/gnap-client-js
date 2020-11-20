@@ -1,6 +1,6 @@
-# OAuth.xyz JS Client _(oauth-xyz-client-js)_
+# GNAP JS Client _(gnap-client-js)_
 
-> Authentication client for the [oauth.xyz](https://oauth.xyz/) protocol for in-browser Javascript and Node.js
+> Authorization client for the [GNAP](https://datatracker.ietf.org/doc/html/draft-ietf-gnap-core-protocol) (previously: [oauth.xyz](https://oauth.xyz/)) protocol for in-browser Javascript and Node.js
 
 ## Table of Contents
 
@@ -17,17 +17,13 @@ TBD
 
 ## Background
 
-An Oauth.xyz authentication client, for both 
+An authorization client, for both 
 [public and confidential clients](https://tools.ietf.org/html/rfc6749#section-2.1),
-for use with in-browser and server-side on Node.js 
-
-Official site:
-
-**[Oauth.xyz](https://oauth.xyz)**
+for use with in-browser and server-side on Node.js. 
 
 Draft IETF spec:
 
-[Transactional Authorization](https://tools.ietf.org/id/draft-richer-transactional-authz-00.html)
+[Grant Negotiation and Authorization Protocol (GNAP)](https://datatracker.ietf.org/doc/html/draft-ietf-gnap-core-protocol)
 
 See blog posts:
 
@@ -43,7 +39,7 @@ Other implementations:
 Creating a client instance:
 
 ```js
-const { XyzClient } = require('oauth-xyz-client')
+const { GnapClient } = require('@interop/gnap-client')
 
 const store = {} // TODO: Store for persisting `nonce`s, request handles, etc
 
@@ -69,7 +65,7 @@ const defaults = {
   interact
 }
 
-const auth = new XyzClient({ store, clientDisplay, capabilities, ...defaults })
+const auth = new GnapClient({ store, clientDisplay, capabilities, ...defaults })
 ```
 
 Create and send a request (low-level API):
@@ -143,8 +139,8 @@ session.fetch // wrapped whatwg `fetch()` that makes authenticated requests
 ## Install
 
 ```bash
-git clone https://github.com/interop-alliance/oauth-xyz-client-js.git
-cd oauth-xyz-client-js
+git clone https://github.com/interop-alliance/gnap-client-js.git
+cd gnap-client-js
 npm install
 ```
 

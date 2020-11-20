@@ -1,6 +1,6 @@
 {
-  "name": "oauth-xyz-client-js",
-  "description": "Authentication client for the https://oauth.xyz protocol for in-browser Javascript and Node.js",
+  "name": "@interop/gnap-client-js",
+  "description": "Authentication client for the GNAP authorization protocol for in-browser Javascript and Node.js",
   "version": "0.0.1",
   "author": {
     "name": "Dmitri Zagidulin",
@@ -9,10 +9,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/interop-alliance/oauth-xyz-client-js"
+    "url": "https://github.com/interop-alliance/gnap-client-js"
   },
-  "homepage": "https://github.com/interop-alliance/oauth-xyz-client-js",
-  "bugs": "https://github.com/interop-alliance/oauth-xyz-client-js/issues",
+  "homepage": "https://github.com/interop-alliance/gnap-client-js",
+  "bugs": "https://github.com/interop-alliance/gnap-client-js/issues",
   "scripts": {
     "test": "npm run standard && npm run test-node",
     "test-node": "cross-env NODE_ENV=test mocha -r esm --preserve-symlinks -t 10000 test/**/*.spec.js",
